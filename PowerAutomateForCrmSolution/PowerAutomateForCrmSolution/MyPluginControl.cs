@@ -1,4 +1,5 @@
 ﻿using McTools.Xrm.Connection;
+using Microsoft.Crm.Sdk.Messages;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
 using Newtonsoft.Json;
@@ -30,7 +31,7 @@ namespace PowerAutomateForCrmSolution
 
 		private void MyPluginControl_Load(object sender, EventArgs e)
 		{
-			ShowInfoNotification("Please select crm solution or create a new solution to continue.", new Uri("https://github.com/MscrmTools/XrmToolBox"));
+			//ShowInfoNotification("Please select crm solution or create a new solution to continue.", new Uri("https://github.com/MscrmTools/XrmToolBox"));
 
 			// Loads or creates the settings for the plugin
 			if (!SettingsManager.Instance.TryLoad(GetType(), out mySettings))
@@ -46,7 +47,7 @@ namespace PowerAutomateForCrmSolution
 
 			ExecuteMethod(GetSolutions);
 			ExecuteMethod(loadFlows);
-			ShowInfoNotification("Please select crm solution or create a new solution to continue.", new Uri("https://github.com/MscrmTools/XrmToolBox"));
+			//ShowInfoNotification("Please select crm solution or create a new solution to continue.", new Uri("https://github.com/MscrmTools/XrmToolBox"));
 
 		}
 
@@ -60,6 +61,7 @@ namespace PowerAutomateForCrmSolution
 			// The ExecuteMethod method handles connecting to an
 			// organization if XrmToolBox is not yet connected
 			//ExecuteMethod(GetAccounts);
+
 		}
 
 
@@ -89,21 +91,106 @@ namespace PowerAutomateForCrmSolution
 			}
 			ExecuteMethod(GetSolutions);
 			ExecuteMethod(loadFlows);
-			
+
 		}
 
 		#region private helpers
 
+		void GetSolutionFlows()
+		{
+
+			string solutionid = string.Empty;
+			ListViewItem item = null;
+			AliasedValue aliasedname = null;
+			AliasedValue aliasedstatecode = null;
+			OptionSetValue optionSetValue = null;
+			string wfstate = "";
+
+			if (cmbSolutions.SelectedItem == null)
+			{
+				return;
+			}
+			else
+			{
+
+				var cbitem = cmbSolutions.SelectedItem as CustomComboboxItem;
+				if (cbitem != null && (!string.IsNullOrWhiteSpace(cbitem.extra)))
+				{
+					solutionid = cbitem.extra;
+					var groupTrg = new ListViewGroup($"Selected Solution: {cbitem.Text}");
+					listViewsolflows.Groups.Add(groupTrg);
+					ImageList myImageList = new ImageList();
+					myImageList.Images.Add(
+					LoadImage("https://yt3.ggpht.com/ytc/AAUvwnhFJfURr8yQoGO1YMAOhLWIrh5cHd4OVjMKZvTTWA=s68-c-k-c0x00ffffff-no-rj"));
+					myImageList.ImageSize = new Size(32, 32);
+					listViewsolflows.LargeImageList = myImageList;
+					listViewsolflows.TileSize = new Size(550, 45);
+
+					// Add column headers so the subitems will appear.
+					listViewsolflows.Columns.AddRange(new ColumnHeader[]
+						{new ColumnHeader(), new ColumnHeader()});
+
+
+					QueryExpression query = new QueryExpression("solutioncomponent");//EntityALogicalName
+					query.ColumnSet = new ColumnSet("objectid", "solutioncomponentid");
+
+					LinkEntity EntityB = new LinkEntity("solutioncomponent", "workflow", "objectid", "workflowid", JoinOperator.Inner);
+					EntityB.Columns = new ColumnSet("name", "statecode");
+					EntityB.EntityAlias = "wkentty716";
+					// Can put condition like this to any Linked entity
+					EntityB.LinkCriteria.Conditions.Add(new ConditionExpression("category", ConditionOperator.Equal, 5));//flows
+					query.LinkEntities.Add(EntityB);
+					query.Criteria.Conditions.Add(new ConditionExpression("solutionid", ConditionOperator.Equal, solutionid));
+					var result = ConnectionDetail.ServiceClient.RetrieveMultiple(query);
+					foreach (var entity in result.Entities)
+					{
+						aliasedname = entity.GetAttributeValue<AliasedValue>("wkentty716.name");
+						aliasedstatecode = entity.GetAttributeValue<AliasedValue>("wkentty716.statecode");
+						if (aliasedname != null && aliasedstatecode != null)
+						{
+							optionSetValue = aliasedstatecode.Value as OptionSetValue;
+							wfstate = optionSetValue.Value == 0 ? "Active" : "Inactive";
+							item = new ListViewItem(new string[] { Convert.ToString(aliasedname.Value), wfstate }, 0, groupTrg);
+							listViewsolflows.Items.Add(item);
+						}
+					}
+				}
+			}
+
+		}
+
+		void ClearEveryThing()
+		{
+			cmbpub.Items.Clear();
+			cmbSolutions.Items.Clear();
+			listViewTriggers.Items.Clear();
+			listViewActions.Items.Clear();
+			listViewFlows.Items.Clear();
+			txtboxflowname.Text = string.Empty;
+			txtsol.Text = string.Empty;
+			listViewsolflows.Items.Clear();
+
+		}
+
+
 		private void GetSolutions()
 		{
+			ClearEveryThing();
+
+
 			WorkAsync(new WorkAsyncInfo
 			{
 				Message = "loading solutions ....",
 				Work = (worker, args) =>
 				{
+					Dictionary<string, List<string>> ODataHeaders = new Dictionary<string, List<string>>() {
+					{ "Accept", new List<string>() { "application/json" } },
+					{"OData-MaxVersion", new List<string>(){"4.0"}},
+					{"OData-Version", new List<string>(){"4.0"}}
+				  };
 
 					args.Result = ConnectionDetail.ServiceClient.ExecuteCrmWebRequest(HttpMethod.Get,
-						"solutions?$select=uniquename,friendlyname,solutionid&$orderby=friendlyname", null, null, "application/json");
+						"solutions?$select=uniquename,friendlyname,solutionid&$orderby=friendlyname", null, ODataHeaders, "application/json");
 				},
 				PostWorkCallBack = (args) =>
 				{
@@ -128,12 +215,17 @@ namespace PowerAutomateForCrmSolution
 								comboboxItem = new CustomComboboxItem();
 								comboboxItem.Text = sol.friendlyname;
 								comboboxItem.Value = sol.uniquename;
+								comboboxItem.extra = sol.solutionid;
 								cmbSolutions.Items.Add(comboboxItem);
 							}
 							ShowInfoNotification("Please select crm solution or create a new solution to continue.", new Uri("https://github.com/MscrmTools/XrmToolBox"));
 						}
 						LoadTriggers();
 						LoadActions();
+						loadusers();
+						string hash = Convert.ToString(Guid.NewGuid().GetHashCode());
+						txtsol.Text = $"solution{hash.Replace("-", "")}";
+						txtboxflowname.Text = $"powerautomate{hash.Replace("-", "")}";
 					}
 					else
 					{
@@ -375,7 +467,6 @@ namespace PowerAutomateForCrmSolution
 
 		}
 
-
 		void loadFlows()
 		{
 			//https://yt3.ggpht.com/ytc/AAUvwnhFJfURr8yQoGO1YMAOhLWIrh5cHd4OVjMKZvTTWA=s68-c-k-c0x00ffffff-no-rj
@@ -410,7 +501,7 @@ namespace PowerAutomateForCrmSolution
 						if (rootFlow != null && rootFlow.value != null && rootFlow.value.Count > 0)
 						{
 							listViewFlows.Items.Clear();
-							var groupTrg = new ListViewGroup("Power Automate (existing flows) ");
+							var groupTrg = new ListViewGroup("System: All PowerAutomate");
 							listViewFlows.Groups.Add(groupTrg);
 							ImageList myImageList = new ImageList();
 							myImageList.Images.Add(
@@ -453,13 +544,278 @@ namespace PowerAutomateForCrmSolution
 			return bmp;
 		}
 
+
+		void enablecontrols(bool flag)
+		{
+			txtboxflowname.Enabled = flag;
+			btnCreateflow.Enabled = flag;
+			btnaddflowtosol.Enabled = true;
+		}
+
+		void loadPublishers()
+		{
+			try
+			{
+				WorkAsync(new WorkAsyncInfo
+				{
+					Work = (worker, args) =>
+					{
+						Dictionary<string, List<string>> ODataHeaders = new Dictionary<string, List<string>>() {
+								{ "Accept", new List<string>() { "application/json" } },
+								{"OData-MaxVersion", new List<string>(){"4.0"}},
+								{"OData-Version", new List<string>(){"4.0"}}
+							  };
+						var query = "not contains(friendlyname,'microsoft') and not contains(friendlyname,'linkedin') and  not contains(friendlyname,'ribbonworkbench') and not " +
+							"contains(friendlyname,'Dynamics 365 Customer Voice') and not " +
+							"contains(friendlyname,'Dynamics 365 Customer Engagement') and not " +
+							"contains(uniquename,'dynamics365customerengagement') and " +
+							"not contains(friendlyname,'Dynamics 365 Customer Voice') and " +
+							"not contains(uniquename,'microsoftdynamics') and " +
+							"not contains(uniquename,'msdynce') and " +
+							"not contains(uniquename,'microsoftformspro') and not contains(friendlyname,'CRM Developer Tools') and " +
+							"not contains(uniquename,'jasonlattimer') and not contains(friendlyname,'CDS Default Publisher')";
+						args.Result = ConnectionDetail.ServiceClient.ExecuteCrmWebRequest(HttpMethod.Get,
+						$"publishers?$select=friendlyname,uniquename,publisherid&$filter={query}", null, ODataHeaders, "application/json");
+
+
+					},
+					PostWorkCallBack = (args) =>
+					{
+						CustomComboboxItem comboboxItem = null;
+						if (args.Error != null)
+						{
+							MessageBox.Show(args.Error.ToString(), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+						}
+						var result = args.Result as HttpResponseMessage;
+						if (result != null && result.IsSuccessStatusCode)
+						{
+							var json = result.Content.ReadAsStringAsync().Result;
+							Publisher publishers = JsonConvert.DeserializeObject<Publisher>(json);
+							if (publishers != null && publishers.value != null && publishers.value.Count > 0)
+							{
+								foreach (var pub in publishers.value)
+								{
+									comboboxItem = new CustomComboboxItem();
+									comboboxItem.Text = pub.friendlyname;
+									comboboxItem.Value = pub.publisherid;
+									cmbpub.Items.Add(comboboxItem);
+
+								}
+
+							}
+							else
+							{
+								comboboxItem = new CustomComboboxItem();
+								comboboxItem.Text = "CDS Default Publisher";
+								comboboxItem.Value = "d21aab71-79e7-11dd-8874-00188b01e34f";
+								cmbpub.Items.Add(comboboxItem);
+							}
+							cmbpub.SelectedIndex = 0; // 
+						}
+						else
+							MessageBox.Show(result.ReasonPhrase, "Error (unable to create solution)", MessageBoxButtons.OK, MessageBoxIcon.Error);
+					}
+				});
+			}
+			catch (Exception ex)
+			{
+				MessageBox.Show(ex.Message, "Error (unable to create solution)", MessageBoxButtons.OK, MessageBoxIcon.Error);
+			}
+		}
+
+		string RemoveSpecialCharacters(string str)
+		{
+			StringBuilder sb = new StringBuilder();
+			foreach (char c in str)
+			{
+				if ((c >= '0' && c <= '9') || (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') || c == '.' || c == '_')
+				{
+					sb.Append(c);
+				}
+			}
+			return sb.ToString();
+		}
+
+		void CreateFlow()
+		{
+			try
+			{
+				Dictionary<string, List<string>> ODataHeaders = new Dictionary<string, List<string>>() {
+								{ "Accept", new List<string>() { "application/json" } },
+								{"OData-MaxVersion", new List<string>(){"4.0"}},
+								{"OData-Version", new List<string>(){"4.0"}}
+							  };
+				if (txtboxflowname.Text == "")
+				{
+					Blink b = new Blink();
+					b.Text(lblerror, "Please provide a flow name.");
+
+					//lblerror.Text = "Please provide a flow name";
+					return;
+				}
+				if (listViewTriggers.SelectedItems.Count == 0 && listViewActions.SelectedItems.Count == 0)
+				{
+
+					Blink b = new Blink();
+					b.Text(lblerror, "Please select at least one trigger and action to create flow.");
+
+					//lblerror.Text = "Please select a trigger and action to create a flow.";
+					return;
+				}
+				else if (listViewTriggers.SelectedItems.Count == 0)
+				{
+
+					Blink b = new Blink();
+					b.Text(lblerror, "Please select at least one trigger to create flow.");
+					//lblerror.Text = "Please select a trigger for flow.";
+					return;
+				}
+				else if (listViewActions.SelectedItems.Count == 0)
+				{
+
+					Blink b = new Blink();
+					b.Text(lblerror, "Please select at least one action to create flow.");
+					//lblerror.Text = "Please select a action for flow.";
+					return;
+				}
+				else
+				{//good to go
+					var triggerTag = listViewTriggers.SelectedItems[0].Tag;
+					var actionTag = listViewActions.SelectedItems[0].Tag;
+					string currentTempalte = $"{CurrentCrmBaseTemplate.StartTemaplte}{actionTag}" +
+											$",{triggerTag},{CurrentCrmBaseTemplate.EndTemaplte}";
+
+					StringBuilder stringBuilder = new StringBuilder();
+					stringBuilder.Append("{");
+					stringBuilder.Append("\"category\":5,");
+					stringBuilder.Append("\"statecode\":0,");
+					stringBuilder.Append("\"type\":1,");
+					stringBuilder.Append("\"name\":\"" + txtboxflowname.Text + "\",");
+					stringBuilder.Append("\"description\":\"" + txtboxflowname.Text + "\",");
+					stringBuilder.Append("\"primaryentity\":\"none\",");
+					stringBuilder.Append("\"clientdata\":" + currentTempalte + "");
+					stringBuilder.Append("}");
+
+					HttpResponseMessage response = ConnectionDetail.ServiceClient.ExecuteCrmWebRequest(HttpMethod.Post,
+						"workflows", stringBuilder.ToString(), ODataHeaders, "application/json");
+
+					string flowId = "";
+					if (response.IsSuccessStatusCode)
+					{
+						var entityUri = response.Headers.GetValues("OData-EntityId").FirstOrDefault();
+						int idx = entityUri.IndexOf("(");
+						flowId = entityUri.Substring(++idx, entityUri.Length - idx - 1);
+
+						if (!string.IsNullOrWhiteSpace(flowId))
+						{
+							ListViewItem lvitem = new ListViewItem(new string[] { txtboxflowname.Text, "Inactive", flowId }, 0);
+							lvitem.Tag = Convert.ToString(flowId);
+							listViewFlows.Items.Insert(0, lvitem);
+							listViewFlows.Items[0].Focused = true;
+							listViewFlows.Items[0].Selected = true;
+
+						}
+
+					}
+				}
+
+
+
+
+			}
+			catch (Exception ex)
+			{
+				MessageBox.Show(ex.Message, "Error (create powerautomate)", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+			}
+		}
+
+		void AddflowToSolution()
+		{
+
+			try
+			{
+				string solutionUniqueName = string.Empty;
+				string workflowid = string.Empty;
+
+
+
+				if (listViewFlows.SelectedItems.Count <= 0)
+				{
+					Blink b = new Blink();
+					b.Text(lblerror, "Please select power automate from list to add into solution.");
+					if (listViewFlows.Items.Count > 0)
+						return;
+				}
+				else //add flow to solution
+				{
+					if (cmbSolutions.SelectedItem != null)// grab SolutionUniqueName
+					{
+						CustomComboboxItem item = cmbSolutions.SelectedItem as CustomComboboxItem;
+						if (item != null)
+							solutionUniqueName = Convert.ToString(item.Value);
+					}
+
+					if (listViewFlows.SelectedItems.Count > 0)
+					{
+						var fitem = listViewFlows.SelectedItems[0];
+						if (fitem.Tag != null)
+							workflowid = Convert.ToString(fitem.Tag);
+					}
+					if ((!string.IsNullOrWhiteSpace(solutionUniqueName)) & (!string.IsNullOrWhiteSpace(workflowid)))
+					{
+
+						AddSolutionComponentRequest addReq = new AddSolutionComponentRequest()
+						{
+							ComponentType = 29,
+							ComponentId = new Guid(workflowid),
+							SolutionUniqueName = solutionUniqueName
+						};
+						ConnectionDetail.ServiceClient.Execute(addReq);
+
+						Blink b = new Blink();
+						b.Text(lblerror, $"Flow Added to solution: {solutionUniqueName}.");
+					}
+				}
+			}
+			catch (Exception)
+			{
+
+
+			}
+		}
+
+		void loadusers()
+		{
+			string email = string.Empty;
+			CustomComboboxItem customComboboxItem = null;
+			QueryExpression query = new QueryExpression("systemuser");//EntityALogicalName
+			query.ColumnSet = new ColumnSet("fullname", "internalemailaddress");
+			query.Criteria.Conditions.Add(new ConditionExpression("isdisabled", ConditionOperator.Equal, false));
+			query.Criteria.Conditions.Add(new ConditionExpression("islicensed", ConditionOperator.Equal, true));
+			query.Criteria.Conditions.Add(new ConditionExpression("internalemailaddress", ConditionOperator.NotNull));
+			var result = ConnectionDetail.ServiceClient.RetrieveMultiple(query);
+			foreach (var entity in result.Entities)
+			{
+				customComboboxItem = new CustomComboboxItem();
+				customComboboxItem.Text = entity.GetAttributeValue<string>("fullname");
+				customComboboxItem.Value = entity.Id.ToString(); ;
+				customComboboxItem.extra = entity.GetAttributeValue<string>("internalemailaddress");  
+				cmbusers.Items.Add(customComboboxItem);
+			}
+		}
 		#endregion
+
+
+
 
 		private void cmbSolutions_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			try
 			{
+				enablecontrols(true);
 				HideNotification();
+				ExecuteMethod(GetSolutionFlows);
 			}
 			catch (Exception ex)
 			{
@@ -469,6 +825,77 @@ namespace PowerAutomateForCrmSolution
 		}
 
 		private void btnNewSolution_Click(object sender, EventArgs e)
+		{
+			cmbpub.Items.Clear();
+			pnlsol.Visible = true;
+			string hash = Convert.ToString(Guid.NewGuid().GetHashCode());
+			txtsol.Text = $"solution{hash.Replace("-", "")}";
+			txtsol.SelectAll();
+			txtsol.Focus();
+			ExecuteMethod(loadPublishers);
+		}
+
+		private void btnCreateflow_Click(object sender, EventArgs e)
+		{
+			ExecuteMethod(CreateFlow);
+		}
+
+		private void btncreatesolution_Click(object sendepr, EventArgs e)
+		{
+			CustomComboboxItem comboboxItem = null;
+			string publisherid = "";
+			if (txtsol.Text == "")
+			{
+				Blink b = new Blink();
+				b.Text(lblerror, "Please provide a solution name (adding default).");
+				string hash = Convert.ToString(Guid.NewGuid().GetHashCode());
+				txtsol.Text = $"solution{hash.Replace("-", "")}";
+				//lblerror.Text = "Please provide a flow name";
+				txtsol.SelectAll();
+				txtsol.Focus();
+				return;
+			}
+			else //create solution
+			{
+				if (cmbpub.SelectedItem != null)
+				{
+					CustomComboboxItem item = cmbpub.SelectedItem as CustomComboboxItem;
+					if (item != null)
+						publisherid = Convert.ToString(item.Value);
+
+					Microsoft.Xrm.Sdk.Entity solution = new Microsoft.Xrm.Sdk.Entity("solution");
+					string solName = RemoveSpecialCharacters(txtsol.Text); //if any
+					solution["uniquename"] = solName;
+					solution["friendlyname"] = solName;
+					solution["publisherid"] = new Microsoft.Xrm.Sdk.EntityReference("publisher", new Guid(publisherid));
+					var newsolutionId = ConnectionDetail.ServiceClient.Create(solution);
+					if (newsolutionId != Guid.Empty)
+					{
+						comboboxItem = new CustomComboboxItem();
+						comboboxItem.Text = solName;
+						comboboxItem.Value = solName;
+						cmbSolutions.Items.Insert(0, comboboxItem);
+						cmbSolutions.SelectedIndex = cmbSolutions.FindStringExact(solName);
+						string hash = Convert.ToString(Guid.NewGuid().GetHashCode());
+						txtsol.Text = $"solution{hash.Replace("-", "")}";
+						pnlsol.Visible = false;//everything okp
+					}
+				}
+			}
+		}
+
+		private void btnaddflowtosol_Click(object sender, EventArgs e)
+		{
+			AddflowToSolution();
+		}
+
+		private void btnbrowser_Click(object sender, EventArgs e)
+		{
+			var formPopup = new Form();
+			formPopup.ShowDialog(this);
+		}
+
+		private void btnshareflow_Click(object sender, EventArgs e)
 		{
 
 		}

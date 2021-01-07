@@ -30,17 +30,21 @@ namespace PowerAutomateForCrmSolution
 		private void InitializeComponent()
 		{
 			this.components = new System.ComponentModel.Container();
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MyPluginControl));
 			this.toolStripMenu = new System.Windows.Forms.ToolStrip();
 			this.tsbClose = new System.Windows.Forms.ToolStripButton();
+			this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
 			this.tssSeparator1 = new System.Windows.Forms.ToolStripSeparator();
 			this.tsbSample = new System.Windows.Forms.ToolStripButton();
+			this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+			this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
 			this.timer1 = new System.Windows.Forms.Timer(this.components);
 			this.listViewTriggers = new System.Windows.Forms.ListView();
 			this.listViewActions = new System.Windows.Forms.ListView();
 			this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
 			this.listViewFlows = new System.Windows.Forms.ListView();
+			this.listViewsolflows = new System.Windows.Forms.ListView();
 			this.lblerror = new System.Windows.Forms.Label();
-			this.btnbrowser = new System.Windows.Forms.Button();
 			this.btnaddflowtosol = new System.Windows.Forms.Button();
 			this.btncreatesolution = new System.Windows.Forms.Button();
 			this.cmbpub = new System.Windows.Forms.ComboBox();
@@ -53,6 +57,9 @@ namespace PowerAutomateForCrmSolution
 			this.btnCreateflow = new System.Windows.Forms.Button();
 			this.pnlsol = new System.Windows.Forms.Panel();
 			this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+			this.cmbusers = new System.Windows.Forms.ComboBox();
+			this.label3 = new System.Windows.Forms.Label();
+			this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
 			this.toolStripMenu.SuspendLayout();
 			this.tableLayoutPanel2.SuspendLayout();
 			this.pnlsol.SuspendLayout();
@@ -64,11 +71,15 @@ namespace PowerAutomateForCrmSolution
 			this.toolStripMenu.ImageScalingSize = new System.Drawing.Size(24, 24);
 			this.toolStripMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsbClose,
+            this.toolStripSeparator3,
             this.tssSeparator1,
-            this.tsbSample});
+            this.tsbSample,
+            this.toolStripSeparator1,
+            this.toolStripSeparator2,
+            this.toolStripButton1});
 			this.toolStripMenu.Location = new System.Drawing.Point(0, 0);
 			this.toolStripMenu.Name = "toolStripMenu";
-			this.toolStripMenu.Size = new System.Drawing.Size(1039, 25);
+			this.toolStripMenu.Size = new System.Drawing.Size(1276, 25);
 			this.toolStripMenu.TabIndex = 4;
 			this.toolStripMenu.Text = "toolStrip1";
 			// 
@@ -80,6 +91,11 @@ namespace PowerAutomateForCrmSolution
 			this.tsbClose.Text = "Close this tool";
 			this.tsbClose.Click += new System.EventHandler(this.tsbClose_Click);
 			// 
+			// toolStripSeparator3
+			// 
+			this.toolStripSeparator3.Name = "toolStripSeparator3";
+			this.toolStripSeparator3.Size = new System.Drawing.Size(6, 25);
+			// 
 			// tssSeparator1
 			// 
 			this.tssSeparator1.Name = "tssSeparator1";
@@ -89,9 +105,19 @@ namespace PowerAutomateForCrmSolution
 			// 
 			this.tsbSample.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
 			this.tsbSample.Name = "tsbSample";
-			this.tsbSample.Size = new System.Drawing.Size(46, 22);
-			this.tsbSample.Text = "Try me";
+			this.tsbSample.Size = new System.Drawing.Size(68, 22);
+			this.tsbSample.Text = "Share Flow";
 			this.tsbSample.Click += new System.EventHandler(this.tsbSample_Click);
+			// 
+			// toolStripSeparator1
+			// 
+			this.toolStripSeparator1.Name = "toolStripSeparator1";
+			this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
+			// 
+			// toolStripSeparator2
+			// 
+			this.toolStripSeparator2.Name = "toolStripSeparator2";
+			this.toolStripSeparator2.Size = new System.Drawing.Size(6, 25);
 			// 
 			// timer1
 			// 
@@ -105,7 +131,7 @@ namespace PowerAutomateForCrmSolution
 			this.listViewTriggers.Location = new System.Drawing.Point(3, 8);
 			this.listViewTriggers.MultiSelect = false;
 			this.listViewTriggers.Name = "listViewTriggers";
-			this.listViewTriggers.Size = new System.Drawing.Size(340, 665);
+			this.listViewTriggers.Size = new System.Drawing.Size(313, 728);
 			this.listViewTriggers.TabIndex = 2;
 			this.listViewTriggers.UseCompatibleStateImageBehavior = false;
 			this.listViewTriggers.View = System.Windows.Forms.View.Tile;
@@ -115,23 +141,25 @@ namespace PowerAutomateForCrmSolution
 			this.listViewActions.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.listViewActions.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.listViewActions.HideSelection = false;
-			this.listViewActions.Location = new System.Drawing.Point(349, 8);
+			this.listViewActions.Location = new System.Drawing.Point(322, 8);
 			this.listViewActions.MultiSelect = false;
 			this.listViewActions.Name = "listViewActions";
-			this.listViewActions.Size = new System.Drawing.Size(340, 665);
+			this.listViewActions.Size = new System.Drawing.Size(313, 728);
 			this.listViewActions.TabIndex = 3;
 			this.listViewActions.UseCompatibleStateImageBehavior = false;
 			this.listViewActions.View = System.Windows.Forms.View.Tile;
 			// 
 			// tableLayoutPanel2
 			// 
-			this.tableLayoutPanel2.ColumnCount = 3;
-			this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-			this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-			this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+			this.tableLayoutPanel2.ColumnCount = 4;
+			this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25.06266F));
+			this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25.06266F));
+			this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25.06266F));
+			this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 24.81203F));
 			this.tableLayoutPanel2.Controls.Add(this.listViewTriggers, 0, 1);
 			this.tableLayoutPanel2.Controls.Add(this.listViewActions, 1, 1);
 			this.tableLayoutPanel2.Controls.Add(this.listViewFlows, 2, 1);
+			this.tableLayoutPanel2.Controls.Add(this.listViewsolflows, 3, 1);
 			this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.tableLayoutPanel2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.tableLayoutPanel2.Location = new System.Drawing.Point(0, 91);
@@ -139,7 +167,7 @@ namespace PowerAutomateForCrmSolution
 			this.tableLayoutPanel2.RowCount = 2;
 			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 5F));
 			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.tableLayoutPanel2.Size = new System.Drawing.Size(1039, 676);
+			this.tableLayoutPanel2.Size = new System.Drawing.Size(1276, 739);
 			this.tableLayoutPanel2.TabIndex = 6;
 			// 
 			// listViewFlows
@@ -147,33 +175,36 @@ namespace PowerAutomateForCrmSolution
 			this.listViewFlows.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.listViewFlows.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.listViewFlows.HideSelection = false;
-			this.listViewFlows.Location = new System.Drawing.Point(695, 8);
+			this.listViewFlows.Location = new System.Drawing.Point(641, 8);
 			this.listViewFlows.MultiSelect = false;
 			this.listViewFlows.Name = "listViewFlows";
-			this.listViewFlows.Size = new System.Drawing.Size(341, 665);
+			this.listViewFlows.Size = new System.Drawing.Size(313, 728);
 			this.listViewFlows.TabIndex = 4;
 			this.listViewFlows.UseCompatibleStateImageBehavior = false;
 			this.listViewFlows.View = System.Windows.Forms.View.Tile;
 			// 
+			// listViewsolflows
+			// 
+			this.listViewsolflows.BackColor = System.Drawing.Color.WhiteSmoke;
+			this.listViewsolflows.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.listViewsolflows.Enabled = false;
+			this.listViewsolflows.HideSelection = false;
+			this.listViewsolflows.Location = new System.Drawing.Point(960, 8);
+			this.listViewsolflows.MultiSelect = false;
+			this.listViewsolflows.Name = "listViewsolflows";
+			this.listViewsolflows.Size = new System.Drawing.Size(313, 728);
+			this.listViewsolflows.TabIndex = 5;
+			this.listViewsolflows.UseCompatibleStateImageBehavior = false;
+			this.listViewsolflows.View = System.Windows.Forms.View.Tile;
+			// 
 			// lblerror
 			// 
-			this.lblerror.Anchor = System.Windows.Forms.AnchorStyles.Left;
 			this.lblerror.AutoSize = true;
-			this.lblerror.Location = new System.Drawing.Point(870, 41);
+			this.lblerror.Location = new System.Drawing.Point(920, 9);
 			this.lblerror.Name = "lblerror";
-			this.lblerror.Size = new System.Drawing.Size(28, 13);
+			this.lblerror.Size = new System.Drawing.Size(67, 13);
 			this.lblerror.TabIndex = 7;
-			this.lblerror.Text = "error";
-			// 
-			// btnbrowser
-			// 
-			this.btnbrowser.Anchor = System.Windows.Forms.AnchorStyles.Left;
-			this.btnbrowser.Location = new System.Drawing.Point(685, 36);
-			this.btnbrowser.Name = "btnbrowser";
-			this.btnbrowser.Size = new System.Drawing.Size(174, 23);
-			this.btnbrowser.TabIndex = 8;
-			this.btnbrowser.Text = "Open &Browser (PowerAutomate)";
-			this.btnbrowser.UseVisualStyleBackColor = true;
+			this.lblerror.Text = "4345645645";
 			// 
 			// btnaddflowtosol
 			// 
@@ -181,10 +212,11 @@ namespace PowerAutomateForCrmSolution
 			this.btnaddflowtosol.Enabled = false;
 			this.btnaddflowtosol.Location = new System.Drawing.Point(538, 36);
 			this.btnaddflowtosol.Name = "btnaddflowtosol";
-			this.btnaddflowtosol.Size = new System.Drawing.Size(131, 23);
+			this.btnaddflowtosol.Size = new System.Drawing.Size(117, 23);
 			this.btnaddflowtosol.TabIndex = 10;
 			this.btnaddflowtosol.Text = "&Add Flow to Solution";
 			this.btnaddflowtosol.UseVisualStyleBackColor = true;
+			this.btnaddflowtosol.Click += new System.EventHandler(this.btnaddflowtosol_Click);
 			// 
 			// btncreatesolution
 			// 
@@ -194,6 +226,7 @@ namespace PowerAutomateForCrmSolution
 			this.btncreatesolution.TabIndex = 2;
 			this.btncreatesolution.Text = "&Create Solution";
 			this.btncreatesolution.UseVisualStyleBackColor = true;
+			this.btncreatesolution.Click += new System.EventHandler(this.btncreatesolution_Click);
 			// 
 			// cmbpub
 			// 
@@ -275,6 +308,7 @@ namespace PowerAutomateForCrmSolution
 			this.btnCreateflow.TabIndex = 6;
 			this.btnCreateflow.Text = "Create &PowerAutomate";
 			this.btnCreateflow.UseVisualStyleBackColor = true;
+			this.btnCreateflow.Click += new System.EventHandler(this.btnCreateflow_Click);
 			// 
 			// pnlsol
 			// 
@@ -295,9 +329,9 @@ namespace PowerAutomateForCrmSolution
 			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 90F));
 			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 295F));
 			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 150F));
-			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 147F));
-			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 185F));
-			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 293F));
+			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 146F));
+			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 80F));
+			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 515F));
 			this.tableLayoutPanel1.Controls.Add(this.label1, 0, 0);
 			this.tableLayoutPanel1.Controls.Add(this.cmbSolutions, 1, 0);
 			this.tableLayoutPanel1.Controls.Add(this.btnNewSolution, 2, 0);
@@ -305,27 +339,56 @@ namespace PowerAutomateForCrmSolution
 			this.tableLayoutPanel1.Controls.Add(this.txtboxflowname, 1, 1);
 			this.tableLayoutPanel1.Controls.Add(this.btnCreateflow, 2, 1);
 			this.tableLayoutPanel1.Controls.Add(this.pnlsol, 3, 0);
-			this.tableLayoutPanel1.Controls.Add(this.lblerror, 5, 1);
-			this.tableLayoutPanel1.Controls.Add(this.btnbrowser, 4, 1);
 			this.tableLayoutPanel1.Controls.Add(this.btnaddflowtosol, 3, 1);
+			this.tableLayoutPanel1.Controls.Add(this.cmbusers, 5, 1);
+			this.tableLayoutPanel1.Controls.Add(this.label3, 4, 1);
 			this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Top;
 			this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 25);
 			this.tableLayoutPanel1.Name = "tableLayoutPanel1";
 			this.tableLayoutPanel1.RowCount = 2;
 			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
 			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
-			this.tableLayoutPanel1.Size = new System.Drawing.Size(1039, 66);
+			this.tableLayoutPanel1.Size = new System.Drawing.Size(1276, 66);
 			this.tableLayoutPanel1.TabIndex = 5;
+			// 
+			// cmbusers
+			// 
+			this.cmbusers.Anchor = System.Windows.Forms.AnchorStyles.Left;
+			this.cmbusers.FormattingEnabled = true;
+			this.cmbusers.Location = new System.Drawing.Point(764, 37);
+			this.cmbusers.Name = "cmbusers";
+			this.cmbusers.Size = new System.Drawing.Size(223, 21);
+			this.cmbusers.TabIndex = 12;
+			// 
+			// label3
+			// 
+			this.label3.Anchor = System.Windows.Forms.AnchorStyles.Left;
+			this.label3.AutoSize = true;
+			this.label3.Location = new System.Drawing.Point(684, 41);
+			this.label3.Name = "label3";
+			this.label3.Size = new System.Drawing.Size(72, 13);
+			this.label3.TabIndex = 13;
+			this.label3.Text = "System users:";
+			// 
+			// toolStripButton1
+			// 
+			this.toolStripButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+			this.toolStripButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton1.Image")));
+			this.toolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.toolStripButton1.Name = "toolStripButton1";
+			this.toolStripButton1.Size = new System.Drawing.Size(98, 22);
+			this.toolStripButton1.Text = "toolStripButton1";
 			// 
 			// MyPluginControl
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+			this.Controls.Add(this.lblerror);
 			this.Controls.Add(this.tableLayoutPanel2);
 			this.Controls.Add(this.tableLayoutPanel1);
 			this.Controls.Add(this.toolStripMenu);
 			this.Name = "MyPluginControl";
-			this.Size = new System.Drawing.Size(1039, 767);
+			this.Size = new System.Drawing.Size(1276, 830);
 			this.Load += new System.EventHandler(this.MyPluginControl_Load);
 			this.toolStripMenu.ResumeLayout(false);
 			this.toolStripMenu.PerformLayout();
@@ -350,7 +413,6 @@ namespace PowerAutomateForCrmSolution
 		private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
 		private System.Windows.Forms.ListView listViewFlows;
 		private System.Windows.Forms.Label lblerror;
-		private System.Windows.Forms.Button btnbrowser;
 		private System.Windows.Forms.Button btnaddflowtosol;
 		private System.Windows.Forms.Button btncreatesolution;
 		private System.Windows.Forms.ComboBox cmbpub;
@@ -363,5 +425,12 @@ namespace PowerAutomateForCrmSolution
 		private System.Windows.Forms.Button btnCreateflow;
 		private System.Windows.Forms.Panel pnlsol;
 		private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
+		private System.Windows.Forms.ListView listViewsolflows;
+		private System.Windows.Forms.ComboBox cmbusers;
+		private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
+		private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+		private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+		private System.Windows.Forms.Label label3;
+		private System.Windows.Forms.ToolStripButton toolStripButton1;
 	}
 }

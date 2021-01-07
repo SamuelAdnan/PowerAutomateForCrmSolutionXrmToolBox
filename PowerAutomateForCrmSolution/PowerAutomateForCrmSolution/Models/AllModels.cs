@@ -95,7 +95,7 @@ namespace PowerAutomateForCrmSolution.Models
 	{
 		public string Text { get; set; }
 		public object Value { get; set; }
-
+		public string extra { get; set; }
 		public override string ToString()
 		{
 			return Text;

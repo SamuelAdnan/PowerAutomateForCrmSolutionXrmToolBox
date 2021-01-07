@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("PowerAutomateForCrmSolution")]
-[assembly: AssemblyDescription("Provide ability to create a new crm PowerAutomate using common data service connectors and add it to crm solution selected.Works with OAuth or Certifcate type connections only.")]
+[assembly: AssemblyTitle("PowerAutomateCloudForCrmSolution")]
+[assembly: AssemblyDescription("Provide ability to create a new cloud crm PowerAutomate using common data service connectors and add it to crm solution selected.Works with OAuth or Certifcate type connections only.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Adnan Samuel")]
-[assembly: AssemblyProduct("PowerAutomateForCrmSolution")]
+[assembly: AssemblyProduct("PowerAutomateCloudForCrmSolution")]
 [assembly: AssemblyCopyright("Copyright ©  2021")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
