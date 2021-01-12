@@ -16,6 +16,9 @@ namespace PowerAutomateForCrmSolution.Models
 		public int statecode { get; set; }
 		public string workflowid { get; set; }
 		public string name { get; set; }
+
+		public string solutionid { get; set; }
+		public string _ownerid_value { get; set; }
 	}
 
 	public class RootFlow
@@ -35,7 +38,7 @@ namespace PowerAutomateForCrmSolution.Models
 			_info = info;
 			_info.Text = message;
 			_tmrBlink = new Timer();
-			_tmrBlink.Interval = 300;
+			_tmrBlink.Interval = 700;
 			_tmrBlink.Tick += new System.EventHandler(tmrBlink_Tick);
 			_tmrBlink.Start();
 		}

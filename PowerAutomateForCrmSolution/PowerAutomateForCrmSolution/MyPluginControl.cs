@@ -23,6 +23,9 @@ namespace PowerAutomateForCrmSolution
 	public partial class MyPluginControl : PluginControlBase
 	{
 		private Settings mySettings;
+		private List<CustomComboboxItem> solutionNames;
+		private List<CustomComboboxItem> userNames;
+
 
 		public MyPluginControl()
 		{
@@ -49,6 +52,7 @@ namespace PowerAutomateForCrmSolution
 			ExecuteMethod(loadFlows);
 			//ShowInfoNotification("Please select crm solution or create a new solution to continue.", new Uri("https://github.com/MscrmTools/XrmToolBox"));
 
+
 		}
 
 		private void tsbClose_Click(object sender, EventArgs e)
@@ -61,6 +65,17 @@ namespace PowerAutomateForCrmSolution
 			// The ExecuteMethod method handles connecting to an
 			// organization if XrmToolBox is not yet connected
 			//ExecuteMethod(GetAccounts);
+
+			if (cmbSolutions.SelectedItem == null)
+			{
+				ShowInfoNotification("Please select crm solution or create a new solution to continue.", new Uri("https://github.com/MscrmTools/XrmToolBox"));
+			}
+			if (cmbusers.SelectedItem == null)
+			{
+				ShowInfoNotification("Please select user to share flow(as owner).", new Uri("https://github.com/MscrmTools/XrmToolBox"));
+			}
+
+
 
 		}
 
@@ -98,7 +113,7 @@ namespace PowerAutomateForCrmSolution
 
 		void GetSolutionFlows()
 		{
-
+			listViewsolflows.Items.Clear();
 			string solutionid = string.Empty;
 			ListViewItem item = null;
 			AliasedValue aliasedname = null;
@@ -176,8 +191,10 @@ namespace PowerAutomateForCrmSolution
 		private void GetSolutions()
 		{
 			ClearEveryThing();
-
-
+			toolTipflow.SetToolTip(btnshareflow, "Share flow with ReadAccess only.");
+			toolTipshareflow.SetToolTip(btnflowowner, "Adding another owner allows others to edit, " + Environment.NewLine
+				+ "update and delete this flow. All owners can also" + Environment.NewLine + " access and run history and add or remove other owners.");
+			solutionNames = new List<CustomComboboxItem>();
 			WorkAsync(new WorkAsyncInfo
 			{
 				Message = "loading solutions ....",
@@ -190,7 +207,7 @@ namespace PowerAutomateForCrmSolution
 				  };
 
 					args.Result = ConnectionDetail.ServiceClient.ExecuteCrmWebRequest(HttpMethod.Get,
-						"solutions?$select=uniquename,friendlyname,solutionid&$orderby=friendlyname", null, ODataHeaders, "application/json");
+						"solutions?$select=uniquename,friendlyname,solutionid&$orderby=uniquename asc", null, ODataHeaders, "application/json");
 				},
 				PostWorkCallBack = (args) =>
 				{
@@ -206,7 +223,7 @@ namespace PowerAutomateForCrmSolution
 						var status = result.StatusCode;
 						var json = result.Content.ReadAsStringAsync().Result;
 						JavaScriptSerializer ser = new JavaScriptSerializer();
-
+						cmbSolutions.Items.Clear();
 						Soltuion soltuions = ser.Deserialize<Soltuion>(json);
 						if (soltuions != null && soltuions.value != null && soltuions.value.Count > 0)
 						{
@@ -217,8 +234,8 @@ namespace PowerAutomateForCrmSolution
 								comboboxItem.Value = sol.uniquename;
 								comboboxItem.extra = sol.solutionid;
 								cmbSolutions.Items.Add(comboboxItem);
+								solutionNames.Add(comboboxItem);//as cache for later use
 							}
-							ShowInfoNotification("Please select crm solution or create a new solution to continue.", new Uri("https://github.com/MscrmTools/XrmToolBox"));
 						}
 						LoadTriggers();
 						LoadActions();
@@ -226,6 +243,8 @@ namespace PowerAutomateForCrmSolution
 						string hash = Convert.ToString(Guid.NewGuid().GetHashCode());
 						txtsol.Text = $"solution{hash.Replace("-", "")}";
 						txtboxflowname.Text = $"powerautomate{hash.Replace("-", "")}";
+						ShowInfoNotification("Please select crm solution or create a new solution to continue.", new Uri("https://github.com/MscrmTools/XrmToolBox"));
+
 					}
 					else
 					{
@@ -482,7 +501,7 @@ namespace PowerAutomateForCrmSolution
 				  };
 
 					args.Result = ConnectionDetail.ServiceClient.ExecuteCrmWebRequest(HttpMethod.Get,
-						"workflows?$select=statecode,workflowid,name&$filter=category eq 5&$orderby=modifiedon desc", null, ODataHeaders, "application/json");
+						"workflows?$select=statecode,workflowid,name,solutionid,_ownerid_value&$filter=category eq 5&$orderby=modifiedon desc", null, ODataHeaders, "application/json");
 				},
 				PostWorkCallBack = (args) =>
 				{
@@ -506,18 +525,35 @@ namespace PowerAutomateForCrmSolution
 							ImageList myImageList = new ImageList();
 							myImageList.Images.Add(
 							LoadImage("https://yt3.ggpht.com/ytc/AAUvwnhFJfURr8yQoGO1YMAOhLWIrh5cHd4OVjMKZvTTWA=s68-c-k-c0x00ffffff-no-rj"));
-							myImageList.ImageSize = new Size(32, 32);
+							myImageList.ImageSize = new Size(50, 35);
 							listViewFlows.LargeImageList = myImageList;
-							listViewFlows.TileSize = new Size(550, 45);
+							listViewFlows.TileSize = new Size(550, 50);
 
 							// Add column headers so the subitems will appear.
 							listViewFlows.Columns.AddRange(new ColumnHeader[]
 								{new ColumnHeader(), new ColumnHeader(), new ColumnHeader()});
 							ListViewItem lvitem = null;
+							string sharedUserName = string.Empty;
+							string owerName = string.Empty;
+							string solutionName = string.Empty;
 
 							foreach (var item in rootFlow.value)
 							{
-								lvitem = new ListViewItem(new string[] { item.name, item.statecode == 0 ? "Active" : "Inactive", item.workflowid }, 0, groupTrg);
+								sharedUserName = string.Empty;
+								solutionName = string.Empty;
+								sharedUserName = String.Empty;
+
+								if (userNames != null && userNames.Count > 0)
+								{
+									var resultUser = userNames.FirstOrDefault(u => u.Value.Equals(item._ownerid_value));
+									if (resultUser != null)
+										owerName = $"Owner: {resultUser.Text}";
+								}
+
+
+								lvitem = new ListViewItem(new string[] { item.name, item.statecode == 0 ? "Active" : "Inactive",
+									owerName }, 0, groupTrg);
+
 								lvitem.Tag = Convert.ToString(item.workflowid);
 								listViewFlows.Items.Add(lvitem);
 							}
@@ -544,12 +580,49 @@ namespace PowerAutomateForCrmSolution
 			return bmp;
 		}
 
+		string GetFlowSharedUsers(string flowId)
+		{
+			StringBuilder str = new StringBuilder();
+			try
+			{
+				var accessRequest = new RetrieveSharedPrincipalsAndAccessRequest
+				{
+					Target = new EntityReference("workflow", new Guid(flowId))
+				};
+
+				var accessResponse = (RetrieveSharedPrincipalsAndAccessResponse)ConnectionDetail.ServiceClient.Execute(accessRequest);
+				foreach (var principalAccess in accessResponse.PrincipalAccesses)
+				{
+					if (userNames != null && userNames.Count > 0)
+					{
+						var resultUser = userNames.FirstOrDefault(u => u.Value.Equals(principalAccess.Principal.Id.ToString()));
+						if (resultUser != null)
+							str.Append($"Shared: {resultUser.Text}, ");
+						else
+						{
+							if (!string.IsNullOrWhiteSpace(principalAccess.Principal.Name))
+								str.Append($"Shared: {principalAccess.Principal.Name}, ");
+						}
+					}
+					else
+						if (!string.IsNullOrWhiteSpace(principalAccess.Principal.Name))
+						str.Append($"Shared: {principalAccess.Principal.Name}, ");
+				}
+
+			}
+			catch (Exception ex)
+			{
+				MessageBox.Show(ex.Message, "Error (RetrieveSharedPrincipalsAndAccessRequest)", MessageBoxButtons.OK, MessageBoxIcon.Error);
+			}
+			return str.ToString();
+
+		}
 
 		void enablecontrols(bool flag)
 		{
 			txtboxflowname.Enabled = flag;
 			btnCreateflow.Enabled = flag;
-			btnaddflowtosol.Enabled = true;
+
 		}
 
 		void loadPublishers()
@@ -775,6 +848,8 @@ namespace PowerAutomateForCrmSolution
 
 						Blink b = new Blink();
 						b.Text(lblerror, $"Flow Added to solution: {solutionUniqueName}.");
+						GetSolutionFlows();
+
 					}
 				}
 			}
@@ -787,6 +862,7 @@ namespace PowerAutomateForCrmSolution
 
 		void loadusers()
 		{
+			userNames = new List<CustomComboboxItem>();
 			string email = string.Empty;
 			CustomComboboxItem customComboboxItem = null;
 			QueryExpression query = new QueryExpression("systemuser");//EntityALogicalName
@@ -794,14 +870,19 @@ namespace PowerAutomateForCrmSolution
 			query.Criteria.Conditions.Add(new ConditionExpression("isdisabled", ConditionOperator.Equal, false));
 			query.Criteria.Conditions.Add(new ConditionExpression("islicensed", ConditionOperator.Equal, true));
 			query.Criteria.Conditions.Add(new ConditionExpression("internalemailaddress", ConditionOperator.NotNull));
+			query.Criteria.Conditions.Add(new ConditionExpression("applicationiduri", ConditionOperator.Null));//not application users
+			OrderExpression orderbyfullname = new OrderExpression("firstname", OrderType.Ascending);
+			query.Orders.Add(orderbyfullname);
 			var result = ConnectionDetail.ServiceClient.RetrieveMultiple(query);
+			cmbusers.Items.Clear();
 			foreach (var entity in result.Entities)
 			{
 				customComboboxItem = new CustomComboboxItem();
 				customComboboxItem.Text = entity.GetAttributeValue<string>("fullname");
 				customComboboxItem.Value = entity.Id.ToString(); ;
-				customComboboxItem.extra = entity.GetAttributeValue<string>("internalemailaddress");  
+				customComboboxItem.extra = entity.GetAttributeValue<string>("internalemailaddress");
 				cmbusers.Items.Add(customComboboxItem);
+				userNames.Add(customComboboxItem);//as  a  cache
 			}
 		}
 		#endregion
@@ -896,6 +977,202 @@ namespace PowerAutomateForCrmSolution
 		}
 
 		private void btnshareflow_Click(object sender, EventArgs e)
+		{
+
+		}
+
+		private void listViewFlows_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			btnaddflowtosol.Enabled = true;
+		}
+
+		private void tableLayoutPanel1_Paint(object sender, PaintEventArgs e)
+		{
+
+		}
+
+		private void btnshareflow_Click_1(object sender, EventArgs e)
+		{
+			string workflowId = string.Empty;
+			Guid wrkflowId = Guid.Empty;
+			Guid userId = Guid.Empty;
+			if (cmbSolutions.SelectedItem == null)
+			{
+				Blink b = new Blink();
+				b.Text(lblerror, "Please select crm solution or create a new solution to continue.");
+				return;
+
+			}
+			if (cmbusers.SelectedItem == null)
+			{
+				Blink b = new Blink();
+				b.Text(lblerror, "Please select user to share a flow with (ReadAccess only).");
+				return;
+			}
+
+			if (listViewFlows.SelectedItems == null)
+			{
+				Blink b = new Blink();
+				b.Text(lblerror, "Please select flow to share.");
+				return;
+			}
+
+			if (listViewFlows.SelectedItems.Count > 0)
+			{
+				var fitem = listViewFlows.SelectedItems[0];
+				if (fitem.Tag != null)
+					workflowId = Convert.ToString(fitem.Tag);
+
+				var cmboUser = cmbusers.SelectedItem as CustomComboboxItem;
+				if (cmboUser != null && (!string.IsNullOrWhiteSpace(workflowId)))
+				{
+					if (cmboUser.Value != null)
+					{
+						var userIdvalue = Convert.ToString(cmboUser.Value);
+						if (Guid.TryParse(workflowId, out wrkflowId))
+						{
+							if (Guid.TryParse(userIdvalue, out userId))
+							{
+								var grantAccessRequest1 = new GrantAccessRequest
+								{
+									PrincipalAccess = new Microsoft.Crm.Sdk.Messages.PrincipalAccess
+									{
+										AccessMask = AccessRights.ReadAccess,
+										Principal = new EntityReference("systemuser", userId) 
+									},
+									Target = new EntityReference("workflow", wrkflowId)
+								};
+
+								ConnectionDetail.ServiceClient.Execute(grantAccessRequest1);
+
+							}
+
+						}
+							
+					}
+				}
+			}
+
+		}
+
+		private void btnflowowner_Click(object sender, EventArgs e)
+		{
+			Guid wrkflowId = Guid.Empty;
+			Guid userId = Guid.Empty;
+			if (cmbSolutions.SelectedItem == null)
+			{
+				Blink b = new Blink();
+				b.Text(lblerror, "Please select crm solution or create a new solution to continue.");
+				return;
+
+			}
+			if (cmbusers.SelectedItem == null)
+			{
+				Blink b = new Blink();
+				b.Text(lblerror, "Please select user to make owner.");
+				return;
+			}
+
+			if (listViewFlows.SelectedItems == null)
+			{
+				Blink b = new Blink();
+				b.Text(lblerror, "Please select flow to change owner.");
+				return;
+			}
+
+			string workflowId = string.Empty;
+			if (listViewFlows.SelectedItems.Count > 0)
+			{
+				var fitem = listViewFlows.SelectedItems[0];
+				if (fitem.Tag != null)
+					workflowId = Convert.ToString(fitem.Tag);
+
+				var cmboUser = cmbusers.SelectedItem as CustomComboboxItem;
+				if (cmboUser != null && (!string.IsNullOrWhiteSpace(workflowId)))
+				{
+					if (cmboUser.Value != null)
+					{
+						var userIdvalue = Convert.ToString(cmboUser.Value);
+						if (Guid.TryParse(workflowId, out wrkflowId))
+						{
+							if (Guid.TryParse(userIdvalue, out userId))
+							{
+								Entity entity = new Entity("workflow", wrkflowId);
+								entity["ownerid"] = new EntityReference("systemuser", userId);
+								ConnectionDetail.ServiceClient.Update(entity);
+							}
+
+						}
+
+					}
+				}
+			}
+
+		}
+
+		private void btnunshare_Click(object sender, EventArgs e)
+		{
+			Guid wrkflowId = Guid.Empty;
+			Guid userId = Guid.Empty;
+			string workflowId = string.Empty;
+			if (cmbSolutions.SelectedItem == null)
+			{
+				Blink b = new Blink();
+				b.Text(lblerror, "Please select crm solution or create a new solution to continue.");
+				return;
+
+			}
+			if (cmbusers.SelectedItem == null)
+			{
+				Blink b = new Blink();
+				b.Text(lblerror, "Please select user to unshare flow.");
+				return;
+			}
+
+			if (listViewFlows.SelectedItems == null)
+			{
+				Blink b = new Blink();
+				b.Text(lblerror, "Please select flow to unshare.");
+				return;
+			}
+
+			if (listViewFlows.SelectedItems.Count > 0)
+			{
+				var fitem = listViewFlows.SelectedItems[0];
+				if (fitem.Tag != null)
+					workflowId = Convert.ToString(fitem.Tag);
+
+				var cmboUser = cmbusers.SelectedItem as CustomComboboxItem;
+				if (cmboUser != null && (!string.IsNullOrWhiteSpace(workflowId)))
+				{
+					if (cmboUser.Value != null)
+					{
+						var userIdvalue = Convert.ToString(cmboUser.Value);
+						if (Guid.TryParse(workflowId, out wrkflowId))
+						{
+							if (Guid.TryParse(userIdvalue, out userId))
+							{
+								var revokeUser2AccessReq = new RevokeAccessRequest
+								{
+									Revokee = new EntityReference("systemuser", userId),
+									Target = new EntityReference("workflow", wrkflowId)
+								};
+								
+								ConnectionDetail.ServiceClient.Execute(revokeUser2AccessReq);
+
+							}
+
+						}
+
+					}
+				}
+			}
+
+
+
+		}
+
+		private void tableLayoutPanel2_Paint(object sender, PaintEventArgs e)
 		{
 
 		}
