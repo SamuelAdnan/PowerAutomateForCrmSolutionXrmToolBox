@@ -68,7 +68,7 @@ namespace PowerAutomateForCrmSolution
 
 			if (cmbSolutions.SelectedItem == null)
 			{
-				ShowInfoNotification("Please select crm solution or create a new solution to continue.", new Uri("https://github.com/MscrmTools/XrmToolBox"));
+				ShowInfoNotification("Please select crm solution or create a new solution to create a new flow.", new Uri("https://github.com/MscrmTools/XrmToolBox"));
 			}
 			if (cmbusers.SelectedItem == null)
 			{
@@ -243,7 +243,7 @@ namespace PowerAutomateForCrmSolution
 						string hash = Convert.ToString(Guid.NewGuid().GetHashCode());
 						txtsol.Text = $"solution{hash.Replace("-", "")}";
 						txtboxflowname.Text = $"powerautomate{hash.Replace("-", "")}";
-						ShowInfoNotification("Please select crm solution or create a new solution to continue.", new Uri("https://github.com/MscrmTools/XrmToolBox"));
+						ShowInfoNotification("Please select crm solution or create a new solution to create a new flow.", new Uri("https://github.com/MscrmTools/XrmToolBox"));
 
 					}
 					else
@@ -622,7 +622,7 @@ namespace PowerAutomateForCrmSolution
 		{
 			txtboxflowname.Enabled = flag;
 			btnCreateflow.Enabled = flag;
-
+			btnaddflowtosol.Enabled = flag;
 		}
 
 		void loadPublishers()
@@ -781,11 +781,12 @@ namespace PowerAutomateForCrmSolution
 
 						if (!string.IsNullOrWhiteSpace(flowId))
 						{
-							ListViewItem lvitem = new ListViewItem(new string[] { txtboxflowname.Text, "Inactive", flowId }, 0);
-							lvitem.Tag = Convert.ToString(flowId);
-							listViewFlows.Items.Insert(0, lvitem);
-							listViewFlows.Items[0].Focused = true;
-							listViewFlows.Items[0].Selected = true;
+							loadFlows();
+							//ListViewItem lvitem = new ListViewItem(new string[] { txtboxflowname.Text, "Inactive", flowId }, 0);
+							//lvitem.Tag = Convert.ToString(flowId);
+							//listViewFlows.Items.Insert(0, lvitem);
+							//listViewFlows.Items[0].Focused = true;
+							//listViewFlows.Items[0].Selected = true;
 
 						}
 
@@ -996,13 +997,13 @@ namespace PowerAutomateForCrmSolution
 			string workflowId = string.Empty;
 			Guid wrkflowId = Guid.Empty;
 			Guid userId = Guid.Empty;
-			if (cmbSolutions.SelectedItem == null)
-			{
-				Blink b = new Blink();
-				b.Text(lblerror, "Please select crm solution or create a new solution to continue.");
-				return;
+			//if (cmbSolutions.SelectedItem == null)
+			//{
+			//	Blink b = new Blink();
+			//	b.Text(lblerror, "Please select crm solution or create a new solution to continue.");
+			//	return;
 
-			}
+			//}
 			if (cmbusers.SelectedItem == null)
 			{
 				Blink b = new Blink();
@@ -1010,7 +1011,7 @@ namespace PowerAutomateForCrmSolution
 				return;
 			}
 
-			if (listViewFlows.SelectedItems == null)
+			if (listViewFlows.SelectedItems != null && listViewFlows.SelectedItems.Count <= 0)
 			{
 				Blink b = new Blink();
 				b.Text(lblerror, "Please select flow to share.");
@@ -1044,7 +1045,9 @@ namespace PowerAutomateForCrmSolution
 								};
 
 								ConnectionDetail.ServiceClient.Execute(grantAccessRequest1);
-
+								Blink b = new Blink();
+								b.Text(lblerror, $"Successfully shared with {cmboUser.Value}.");
+								return;
 							}
 
 						}
@@ -1059,21 +1062,21 @@ namespace PowerAutomateForCrmSolution
 		{
 			Guid wrkflowId = Guid.Empty;
 			Guid userId = Guid.Empty;
-			if (cmbSolutions.SelectedItem == null)
-			{
-				Blink b = new Blink();
-				b.Text(lblerror, "Please select crm solution or create a new solution to continue.");
-				return;
+			//if (cmbSolutions.SelectedItem == null)
+			//{
+			//	Blink b = new Blink();
+			//	b.Text(lblerror, "Please select crm solution or create a new solution to continue.");
+			//	return;
 
-			}
+			//}
 			if (cmbusers.SelectedItem == null)
 			{
 				Blink b = new Blink();
-				b.Text(lblerror, "Please select user to make owner.");
+				b.Text(lblerror, "Please select user to make as owner.");
 				return;
 			}
 
-			if (listViewFlows.SelectedItems == null)
+			if (listViewFlows.SelectedItems != null && listViewFlows.SelectedItems.Count <= 0)
 			{
 				Blink b = new Blink();
 				b.Text(lblerror, "Please select flow to change owner.");
@@ -1100,6 +1103,7 @@ namespace PowerAutomateForCrmSolution
 								Entity entity = new Entity("workflow", wrkflowId);
 								entity["ownerid"] = new EntityReference("systemuser", userId);
 								ConnectionDetail.ServiceClient.Update(entity);
+								loadFlows();
 							}
 
 						}
@@ -1115,13 +1119,13 @@ namespace PowerAutomateForCrmSolution
 			Guid wrkflowId = Guid.Empty;
 			Guid userId = Guid.Empty;
 			string workflowId = string.Empty;
-			if (cmbSolutions.SelectedItem == null)
-			{
-				Blink b = new Blink();
-				b.Text(lblerror, "Please select crm solution or create a new solution to continue.");
-				return;
+			//if (cmbSolutions.SelectedItem == null)
+			//{
+			//	Blink b = new Blink();
+			//	b.Text(lblerror, "Please select crm solution or create a new solution to continue.");
+			//	return;
 
-			}
+			//}
 			if (cmbusers.SelectedItem == null)
 			{
 				Blink b = new Blink();
@@ -1129,7 +1133,7 @@ namespace PowerAutomateForCrmSolution
 				return;
 			}
 
-			if (listViewFlows.SelectedItems == null)
+			if (listViewFlows.SelectedItems != null && listViewFlows.SelectedItems.Count <=0)
 			{
 				Blink b = new Blink();
 				b.Text(lblerror, "Please select flow to unshare.");
@@ -1159,7 +1163,9 @@ namespace PowerAutomateForCrmSolution
 								};
 								
 								ConnectionDetail.ServiceClient.Execute(revokeUser2AccessReq);
-
+								Blink b = new Blink();
+								b.Text(lblerror, $"Successfully unshared with {cmboUser.Value}.");
+								return;
 							}
 
 						}

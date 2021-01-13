@@ -144,7 +144,7 @@ namespace PowerAutomateForCrmSolution.PowerAutomateTemplates.CRM
 
 		static string Get_Unrelate_records()
 		{
-			return "actions\\\":{ \\\"Unrelate_records\\\":{\\\"type\\\":\\\"OpenApiConnection\\\",\\\"inputs\\\":{\\\"host\\\":{\\\"connectionName\\\":\\\"shared_commondataserviceforapps\\\",\\\"operationId\\\":\\\"DisassociateEntities\\\",\\\"apiId\\\":\\\"\\/providers/Microsoft.PowerApps\\/apis\\/shared_commondataserviceforapps\\\"},\\\"parameters\\\":{\\\"entityName\\\":\\\"accoutns\\\",\\\"recordId\\\":\\\"\\\",\\\"associationEntityRelationship\\\":\\\"\\\",\\\"$id\\\":\\\"\\\"},\\\"authentication\\\":{\\\"type\\\":\\\"Raw\\\",\\\"value\\\":\\\"@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']\\\"}},\\\"runAfter\\\":{}}}";
+			return "actions\\\":{ \\\"Unrelate_records\\\":{\\\"type\\\":\\\"OpenApiConnection\\\",\\\"inputs\\\":{\\\"host\\\":{\\\"connectionName\\\":\\\"shared_commondataserviceforapps\\\",\\\"operationId\\\":\\\"DisassociateEntities\\\",\\\"apiId\\\":\\\"\\/providers/Microsoft.PowerApps\\/apis\\/shared_commondataserviceforapps\\\"},\\\"parameters\\\":{\\\"entityName\\\":\\\"accounts\\\",\\\"recordId\\\":\\\"\\\",\\\"associationEntityRelationship\\\":\\\"\\\",\\\"$id\\\":\\\"\\\"},\\\"authentication\\\":{\\\"type\\\":\\\"Raw\\\",\\\"value\\\":\\\"@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']\\\"}},\\\"runAfter\\\":{}}}";
 
 		}
 		#endregion
