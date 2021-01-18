@@ -38,6 +38,12 @@ namespace PowerAutomateForCrmSolution
 			this.listViewActions = new System.Windows.Forms.ListView();
 			this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
 			this.listViewsolflows = new System.Windows.Forms.ListView();
+			this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
+			this.listViewFlows = new System.Windows.Forms.ListView();
+			this.panel1 = new System.Windows.Forms.Panel();
+			this.btnflowowner = new System.Windows.Forms.Button();
+			this.btnshareflow = new System.Windows.Forms.Button();
+			this.btnunshare = new System.Windows.Forms.Button();
 			this.lblerror = new System.Windows.Forms.Label();
 			this.btnaddflowtosol = new System.Windows.Forms.Button();
 			this.btncreatesolution = new System.Windows.Forms.Button();
@@ -54,19 +60,13 @@ namespace PowerAutomateForCrmSolution
 			this.cmbusers = new System.Windows.Forms.ComboBox();
 			this.label3 = new System.Windows.Forms.Label();
 			this.toolTipshareflow = new System.Windows.Forms.ToolTip(this.components);
-			this.btnshareflow = new System.Windows.Forms.Button();
-			this.btnunshare = new System.Windows.Forms.Button();
-			this.btnflowowner = new System.Windows.Forms.Button();
 			this.toolTipflow = new System.Windows.Forms.ToolTip(this.components);
-			this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
-			this.listViewFlows = new System.Windows.Forms.ListView();
-			this.panel1 = new System.Windows.Forms.Panel();
 			this.toolStripMenu.SuspendLayout();
 			this.tableLayoutPanel2.SuspendLayout();
-			this.pnlsol.SuspendLayout();
-			this.tableLayoutPanel1.SuspendLayout();
 			this.tableLayoutPanel3.SuspendLayout();
 			this.panel1.SuspendLayout();
+			this.pnlsol.SuspendLayout();
+			this.tableLayoutPanel1.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// toolStripMenu
@@ -159,6 +159,80 @@ namespace PowerAutomateForCrmSolution
 			this.listViewsolflows.TabIndex = 5;
 			this.listViewsolflows.UseCompatibleStateImageBehavior = false;
 			this.listViewsolflows.View = System.Windows.Forms.View.Tile;
+			// 
+			// tableLayoutPanel3
+			// 
+			this.tableLayoutPanel3.ColumnCount = 1;
+			this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 313F));
+			this.tableLayoutPanel3.Controls.Add(this.listViewFlows, 0, 1);
+			this.tableLayoutPanel3.Controls.Add(this.panel1, 0, 0);
+			this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.tableLayoutPanel3.Location = new System.Drawing.Point(641, 8);
+			this.tableLayoutPanel3.Name = "tableLayoutPanel3";
+			this.tableLayoutPanel3.RowCount = 2;
+			this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 35F));
+			this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.tableLayoutPanel3.Size = new System.Drawing.Size(313, 711);
+			this.tableLayoutPanel3.TabIndex = 6;
+			// 
+			// listViewFlows
+			// 
+			this.listViewFlows.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.listViewFlows.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.listViewFlows.HideSelection = false;
+			this.listViewFlows.Location = new System.Drawing.Point(3, 38);
+			this.listViewFlows.MultiSelect = false;
+			this.listViewFlows.Name = "listViewFlows";
+			this.listViewFlows.Size = new System.Drawing.Size(307, 670);
+			this.listViewFlows.TabIndex = 5;
+			this.listViewFlows.UseCompatibleStateImageBehavior = false;
+			this.listViewFlows.View = System.Windows.Forms.View.Tile;
+			// 
+			// panel1
+			// 
+			this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+			this.tableLayoutPanel3.SetColumnSpan(this.panel1, 2);
+			this.panel1.Controls.Add(this.btnflowowner);
+			this.panel1.Controls.Add(this.btnshareflow);
+			this.panel1.Controls.Add(this.btnunshare);
+			this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.panel1.Location = new System.Drawing.Point(3, 3);
+			this.panel1.Name = "panel1";
+			this.panel1.Size = new System.Drawing.Size(307, 29);
+			this.panel1.TabIndex = 6;
+			// 
+			// btnflowowner
+			// 
+			this.btnflowowner.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.btnflowowner.Location = new System.Drawing.Point(175, 1);
+			this.btnflowowner.Name = "btnflowowner";
+			this.btnflowowner.Size = new System.Drawing.Size(100, 23);
+			this.btnflowowner.TabIndex = 10;
+			this.btnflowowner.Text = "&Change &owner";
+			this.btnflowowner.UseVisualStyleBackColor = true;
+			this.btnflowowner.Click += new System.EventHandler(this.btnflowowner_Click);
+			// 
+			// btnshareflow
+			// 
+			this.btnshareflow.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.btnshareflow.Location = new System.Drawing.Point(3, 2);
+			this.btnshareflow.Name = "btnshareflow";
+			this.btnshareflow.Size = new System.Drawing.Size(75, 23);
+			this.btnshareflow.TabIndex = 8;
+			this.btnshareflow.Text = "Sha&re flow";
+			this.btnshareflow.UseVisualStyleBackColor = true;
+			this.btnshareflow.Click += new System.EventHandler(this.btnshareflow_Click_1);
+			// 
+			// btnunshare
+			// 
+			this.btnunshare.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.btnunshare.Location = new System.Drawing.Point(84, 1);
+			this.btnunshare.Name = "btnunshare";
+			this.btnunshare.Size = new System.Drawing.Size(85, 23);
+			this.btnunshare.TabIndex = 9;
+			this.btnunshare.Text = "&Unshare flow";
+			this.btnunshare.UseVisualStyleBackColor = true;
+			this.btnunshare.Click += new System.EventHandler(this.btnunshare_Click);
 			// 
 			// lblerror
 			// 
@@ -334,80 +408,6 @@ namespace PowerAutomateForCrmSolution
 			this.label3.TabIndex = 13;
 			this.label3.Text = "System users:";
 			// 
-			// btnshareflow
-			// 
-			this.btnshareflow.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.btnshareflow.Location = new System.Drawing.Point(3, 2);
-			this.btnshareflow.Name = "btnshareflow";
-			this.btnshareflow.Size = new System.Drawing.Size(75, 23);
-			this.btnshareflow.TabIndex = 8;
-			this.btnshareflow.Text = "Sha&re flow";
-			this.btnshareflow.UseVisualStyleBackColor = true;
-			this.btnshareflow.Click += new System.EventHandler(this.btnshareflow_Click_1);
-			// 
-			// btnunshare
-			// 
-			this.btnunshare.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.btnunshare.Location = new System.Drawing.Point(84, 1);
-			this.btnunshare.Name = "btnunshare";
-			this.btnunshare.Size = new System.Drawing.Size(85, 23);
-			this.btnunshare.TabIndex = 9;
-			this.btnunshare.Text = "&Unshare flow";
-			this.btnunshare.UseVisualStyleBackColor = true;
-			this.btnunshare.Click += new System.EventHandler(this.btnunshare_Click);
-			// 
-			// btnflowowner
-			// 
-			this.btnflowowner.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.btnflowowner.Location = new System.Drawing.Point(175, 1);
-			this.btnflowowner.Name = "btnflowowner";
-			this.btnflowowner.Size = new System.Drawing.Size(128, 23);
-			this.btnflowowner.TabIndex = 10;
-			this.btnflowowner.Text = "&Change &owner";
-			this.btnflowowner.UseVisualStyleBackColor = true;
-			this.btnflowowner.Click += new System.EventHandler(this.btnflowowner_Click);
-			// 
-			// tableLayoutPanel3
-			// 
-			this.tableLayoutPanel3.ColumnCount = 1;
-			this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 14F));
-			this.tableLayoutPanel3.Controls.Add(this.listViewFlows, 0, 1);
-			this.tableLayoutPanel3.Controls.Add(this.panel1, 0, 0);
-			this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.tableLayoutPanel3.Location = new System.Drawing.Point(641, 8);
-			this.tableLayoutPanel3.Name = "tableLayoutPanel3";
-			this.tableLayoutPanel3.RowCount = 2;
-			this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 35F));
-			this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.tableLayoutPanel3.Size = new System.Drawing.Size(313, 711);
-			this.tableLayoutPanel3.TabIndex = 6;
-			// 
-			// listViewFlows
-			// 
-			this.listViewFlows.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.listViewFlows.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.listViewFlows.HideSelection = false;
-			this.listViewFlows.Location = new System.Drawing.Point(3, 38);
-			this.listViewFlows.MultiSelect = false;
-			this.listViewFlows.Name = "listViewFlows";
-			this.listViewFlows.Size = new System.Drawing.Size(307, 670);
-			this.listViewFlows.TabIndex = 5;
-			this.listViewFlows.UseCompatibleStateImageBehavior = false;
-			this.listViewFlows.View = System.Windows.Forms.View.Tile;
-			// 
-			// panel1
-			// 
-			this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-			this.tableLayoutPanel3.SetColumnSpan(this.panel1, 2);
-			this.panel1.Controls.Add(this.btnflowowner);
-			this.panel1.Controls.Add(this.btnshareflow);
-			this.panel1.Controls.Add(this.btnunshare);
-			this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.panel1.Location = new System.Drawing.Point(3, 3);
-			this.panel1.Name = "panel1";
-			this.panel1.Size = new System.Drawing.Size(307, 29);
-			this.panel1.TabIndex = 6;
-			// 
 			// MyPluginControl
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -422,12 +422,12 @@ namespace PowerAutomateForCrmSolution
 			this.toolStripMenu.ResumeLayout(false);
 			this.toolStripMenu.PerformLayout();
 			this.tableLayoutPanel2.ResumeLayout(false);
+			this.tableLayoutPanel3.ResumeLayout(false);
+			this.panel1.ResumeLayout(false);
 			this.pnlsol.ResumeLayout(false);
 			this.pnlsol.PerformLayout();
 			this.tableLayoutPanel1.ResumeLayout(false);
 			this.tableLayoutPanel1.PerformLayout();
-			this.tableLayoutPanel3.ResumeLayout(false);
-			this.panel1.ResumeLayout(false);
 			this.ResumeLayout(false);
 			this.PerformLayout();
 

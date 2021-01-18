@@ -21,7 +21,7 @@ namespace PowerAutomateForCrmSolution
 			public static string When_a_HTTP_request_is_received = Get_When_a_HTTP_request_is_received();
 			public static string Recurrance = Get_Recurrance();
 			public static string HTTP = Get_HTTP();
-			
+
 			#region Private Helpers
 
 			static string Get_When_a_HTTP_request_is_received()
@@ -42,9 +42,9 @@ namespace PowerAutomateForCrmSolution
 				return HTTP;
 			}
 
-		
 
-		
+
+
 			#endregion
 
 		}
@@ -52,6 +52,28 @@ namespace PowerAutomateForCrmSolution
 		#endregion
 
 
+		#region Actions
+		public struct Actions
+		{
+			public static string PowerPlatFormListAllEnvirnoments = Get_PowerPlatFormListAllEnvirnoments();
+			public static string AllPowerApps = GetAllPowerApps();
+
+			static string Get_PowerPlatFormListAllEnvirnoments()
+			{
+				PowerPlatFormListAllEnvirnoments = "actions\\\":{\\\"List_Environments_as_Admin\\\":{\\\"type\\\":\\\"OpenApiConnection\\\",\\\"inputs\\\":{\\\"host\\\":{\\\"connectionName\\\":\\\"shared_powerplatformforadmins\\\",\\\"operationId\\\":\\\"Get-AdminEnvironment\\\",\\\"apiId\\\":\\\"/providers/Microsoft.PowerApps/apis/shared_powerplatformforadmins\\\"},\\\"parameters\\\":{\\\"api-version\\\":\\\"2018-10-01\\\"},\\\"authentication\\\":\\\"@parameters('$authentication')\\\"},\\\"runAfter\\\":{}}}";
+				return PowerPlatFormListAllEnvirnoments;
+			}
+
+			static string GetAllPowerApps()
+			{
+				AllPowerApps = "actions\\\":{\\\"Get_Apps_as_Admin\\\":{\\\"type\\\":\\\"OpenApiConnection\\\",\\\"inputs\\\":{\\\"host\\\":{\\\"connectionName\\\":\\\"shared_powerappsforadmins\\\",\\\"operationId\\\":\\\"Get-AdminApps\\\",\\\"apiId\\\":\\\"/providers/Microsoft.PowerApps/apis/shared_powerappsforadmins\\\"},\\\"parameters\\\":{\\\"environment\\\":\\\"2016-11-01\\\",\\\"$top\\\":250},\\\"authentication\\\":{\\\"type\\\":\\\"Raw\\\",\\\"value\\\":\\\"@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']\\\"}},\\\"runAfter\\\":{}}}";
+				return AllPowerApps;
+			}
+
+		}
+
+
+		#endregion
 
 
 

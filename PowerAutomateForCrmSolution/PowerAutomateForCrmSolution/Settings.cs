@@ -17,3 +17,5 @@ namespace PowerAutomateForCrmSolution
 		public string LastUsedOrganizationWebappUrl { get; set; }
 	}
 }
+//powerplatform
+///https://connectoricons-prod.azureedge.net/releases/v1.0.1382/1.0.1382.2097/powerplatformforadmins/icon.png

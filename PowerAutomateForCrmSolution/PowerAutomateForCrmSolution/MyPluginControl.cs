@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
@@ -33,9 +34,7 @@ namespace PowerAutomateForCrmSolution
 		}
 
 		private void MyPluginControl_Load(object sender, EventArgs e)
-		{
-			//ShowInfoNotification("Please select crm solution or create a new solution to continue.", new Uri("https://github.com/MscrmTools/XrmToolBox"));
-
+		{		
 			// Loads or creates the settings for the plugin
 			if (!SettingsManager.Instance.TryLoad(GetType(), out mySettings))
 			{
@@ -50,8 +49,7 @@ namespace PowerAutomateForCrmSolution
 
 			ExecuteMethod(GetSolutions);
 			ExecuteMethod(loadFlows);
-			//ShowInfoNotification("Please select crm solution or create a new solution to continue.", new Uri("https://github.com/MscrmTools/XrmToolBox"));
-
+			ShowInfoNotification("Please select crm solution or create a new solution in order to create a new flow or add existing flow to selected solution.", new Uri("https://github.com/yesadahmed/xrmtoolboxdocumentation"));
 
 		}
 
@@ -68,11 +66,12 @@ namespace PowerAutomateForCrmSolution
 
 			if (cmbSolutions.SelectedItem == null)
 			{
-				ShowInfoNotification("Please select crm solution or create a new solution to create a new flow.", new Uri("https://github.com/MscrmTools/XrmToolBox"));
+				ShowInfoNotification("Please select crm solution or create a new solution in order to create a new flow or add existing flow to selected solution.", new Uri("https://github.com/yesadahmed/xrmtoolboxdocumentation"));
+
 			}
 			if (cmbusers.SelectedItem == null)
 			{
-				ShowInfoNotification("Please select user to share flow(as owner).", new Uri("https://github.com/MscrmTools/XrmToolBox"));
+				ShowInfoNotification("Please select user to share flow(as owner).", new Uri("https://github.com/yesadahmed/xrmtoolboxdocumentation"));
 			}
 
 
@@ -106,7 +105,7 @@ namespace PowerAutomateForCrmSolution
 			}
 			ExecuteMethod(GetSolutions);
 			ExecuteMethod(loadFlows);
-
+		
 		}
 
 		#region private helpers
@@ -135,6 +134,7 @@ namespace PowerAutomateForCrmSolution
 					var groupTrg = new ListViewGroup($"Selected Solution: {cbitem.Text}");
 					listViewsolflows.Groups.Add(groupTrg);
 					ImageList myImageList = new ImageList();
+					myImageList.ColorDepth = ColorDepth.Depth32Bit;
 					myImageList.Images.Add(
 					LoadImage("https://yt3.ggpht.com/ytc/AAUvwnhFJfURr8yQoGO1YMAOhLWIrh5cHd4OVjMKZvTTWA=s68-c-k-c0x00ffffff-no-rj"));
 					myImageList.ImageSize = new Size(32, 32);
@@ -219,7 +219,7 @@ namespace PowerAutomateForCrmSolution
 					var result = args.Result as HttpResponseMessage;
 					if (result != null && result.IsSuccessStatusCode)
 					{
-						HideNotification();
+						//HideNotification();
 						var status = result.StatusCode;
 						var json = result.Content.ReadAsStringAsync().Result;
 						JavaScriptSerializer ser = new JavaScriptSerializer();
@@ -243,7 +243,7 @@ namespace PowerAutomateForCrmSolution
 						string hash = Convert.ToString(Guid.NewGuid().GetHashCode());
 						txtsol.Text = $"solution{hash.Replace("-", "")}";
 						txtboxflowname.Text = $"powerautomate{hash.Replace("-", "")}";
-						ShowInfoNotification("Please select crm solution or create a new solution to create a new flow.", new Uri("https://github.com/MscrmTools/XrmToolBox"));
+						//ShowInfoNotification("Please select crm solution or create a new solution in order to create a new flow or add existing flow to selected solution.", new Uri("https://github.com/yesadahmed/xrmtoolboxdocumentation"));
 
 					}
 					else
@@ -269,7 +269,7 @@ namespace PowerAutomateForCrmSolution
 						try
 						{
 							string alert = "This plugin is for Dynamic365 WebAPI so it works only with OAuth or Certificate types connections. Please connect using OAuth connection. Click learn more link. ";
-							ShowErrorNotification(alert, new Uri("https://github.com/yesadahmed/xrmtoolboxAddins/blob/main/README.md"));
+							ShowErrorNotification(alert, new Uri("https://github.com/yesadahmed/xrmtoolboxdocumentation"));
 							alert = "This plugin is for Dynamic365 WebAPI so it works only with OAuth or Certificate types connections. Please connect using OAuth connection. \n\t Follow the link. https://github.com/yesadahmed/xrmtoolboxAddins/blob/main/README.md";
 							MessageBox.Show(alert, "OAuth connection required", MessageBoxButtons.OK, MessageBoxIcon.Warning);
 
@@ -283,7 +283,7 @@ namespace PowerAutomateForCrmSolution
 				else
 				{
 
-					ShowErrorNotification("Something wrong with your connection, Try again or make a new OAuth connection.", new Uri("https://github.com/yesadahmed/xrmtoolboxAddins"));
+					ShowErrorNotification("Something wrong with your connection, Try again or make a new OAuth connection.", new Uri("https://github.com/yesadahmed/xrmtoolboxdocumentation"));
 				}
 			}
 			catch (Exception)
@@ -297,13 +297,15 @@ namespace PowerAutomateForCrmSolution
 		{
 			listViewTriggers.Items.Clear();
 			listViewTriggers.InsertionMark.Color = Color.Green;
-			listViewTriggers.View = View.Tile;
+			listViewTriggers.View = View.LargeIcon;
 			listViewTriggers.AllowDrop = false;
 			// Initialize the tile size.
 			listViewTriggers.TileSize = new Size(400, 45);
 
 			// Initialize the item icons.
 			ImageList myImageList = new ImageList();
+			
+			myImageList.ColorDepth = ColorDepth.Depth32Bit;
 			myImageList.Images.Add(
 			LoadImage("https://connectoricons-prod.azureedge.net/releases/v1.0.1419/1.0.1419.2241/commondataservice/icon.png"));
 
@@ -316,10 +318,9 @@ namespace PowerAutomateForCrmSolution
 			myImageList.Images.Add(
 		LoadImage("https://psuxemea.azureedge.net/Content/Images/DesignerOperations/excelonlinebusiness.png"));//excel online
 
+			myImageList.ImageSize = new Size(45, 45);
 
 
-
-			myImageList.ImageSize = new Size(32, 32);
 			listViewTriggers.LargeImageList = myImageList;
 
 			// Add column headers so the subitems will appear.
@@ -339,11 +340,11 @@ namespace PowerAutomateForCrmSolution
 
 			// Create items and add them to myListView.
 			ListViewItem item0 = new ListViewItem(new string[]
-				{"When_a_record_is_created"}, 0, groupTrg);
+				{"When_a_record_is_created".Replace("_"," ")}, 0, groupTrg);
 			item0.Tag = CommonCrmTriggers.When_a_record_is_created;
 
 			ListViewItem item1 = new ListViewItem(new string[]
-				{"When_a_record_is_selected"}, 0, groupTrg);
+				{"When_a_record_is_selected".Replace("_"," ")}, 0, groupTrg);
 			item1.Tag = CommonCrmTriggers.When_a_record_is_deleted;
 
 			ListViewItem item2 = new ListViewItem(new string[]
@@ -351,12 +352,12 @@ namespace PowerAutomateForCrmSolution
 			item2.Tag = CommonCrmTriggers.Update_a_record;
 
 			ListViewItem item3 = new ListViewItem(new string[]
-				{"When_a_record_is_deleted"}, 0, groupTrg);
+				{"When_a_record_is_deleted".Replace("_"," ")}, 0, groupTrg);
 			item3.Tag = CommonCrmTriggers.When_a_record_is_deleted;
 
 
 			ListViewItem item4 = new ListViewItem(new string[]
-				{"When_a_record_is_created_updated_or_deleted"}, 0, groupTrgCurr);
+				{"When a record_is_created_updated_or_deleted".Replace("_"," ")}, 0, groupTrgCurr);
 			item4.Tag = CurrentCrmTriggers.When_a_record_is_created_updated_or_deleted;
 
 			ListViewItem item6 = new ListViewItem(new string[]
@@ -364,7 +365,7 @@ namespace PowerAutomateForCrmSolution
 			item6.Tag = PowerAppsTemplates.Triggers.Recurrance;
 
 			ListViewItem item5 = new ListViewItem(new string[]
-				{"When a HTTP request is received"}, 1, groupGeneral);
+				{"When a HTTP request is received".Replace("_"," ")}, 1, groupGeneral);
 			item5.Tag = PowerAppsTemplates.Triggers.When_a_HTTP_request_is_received;
 
 			ListViewItem item7 = new ListViewItem(new string[]
@@ -383,18 +384,26 @@ namespace PowerAutomateForCrmSolution
 		{
 			listViewActions.Items.Clear();
 			listViewActions.InsertionMark.Color = Color.Green;
-			listViewActions.View = View.Tile;
+			listViewActions.View = View.LargeIcon;
 			listViewActions.AllowDrop = false;
+
 			// Initialize the tile size.
 			listViewActions.TileSize = new Size(400, 45);
 
 			// Initialize the item icons.
 			ImageList myImageList = new ImageList();
+			myImageList.ColorDepth = ColorDepth.Depth32Bit;
 			myImageList.Images.Add(
 			LoadImage("https://connectoricons-prod.azureedge.net/releases/v1.0.1419/1.0.1419.2241/commondataservice/icon.png"));
 
+			myImageList.Images.Add(
+		LoadImage("https://connectoricons-prod.azureedge.net/releases/v1.0.1382/1.0.1382.2097/powerplatformforadmins/icon.png"));
 
-			myImageList.ImageSize = new Size(32, 32);
+			myImageList.Images.Add(
+					LoadImage("https://connectoricons-prod.azureedge.net/releases/v1.0.1429/1.0.1429.2295/powerappsforadmins/icon.png"));
+
+
+			myImageList.ImageSize = new Size(45, 45);
 			listViewActions.LargeImageList = myImageList;
 
 			// Add column headers so the subitems will appear.
@@ -407,82 +416,84 @@ namespace PowerAutomateForCrmSolution
 			var groupTrgCurr = new ListViewGroup("Actions (Current envirnoment) ");
 			listViewActions.Groups.Add(groupTrgCurr);
 
-			var groupGeneral = new ListViewGroup("Actions (General) ");
+			var groupGeneral = new ListViewGroup("Actions (General for admins) ");
 			listViewActions.Groups.Add(groupGeneral);
 
 			// Create items and add them to myListView.
 			ListViewItem item0 = new ListViewItem(new string[]
-				{"List_records"}, 0, groupTrg);
+				{"ListRecords"}, 0, groupTrg);
 			item0.Tag = CommonCrmActions.List_records;
 
 			ListViewItem item1 = new ListViewItem(new string[]
-				{"Create_a_new_record"}, 0, groupTrg);
+				{"CreateRecord"}, 0, groupTrg);
 			item1.Tag = CommonCrmActions.Create_a_new_record;
 
 			ListViewItem item2 = new ListViewItem(new string[]
-				{"Update_a_record"}, 0, groupTrg);
+				{"UpdateRecord"}, 0, groupTrg);
 			item2.Tag = CommonCrmActions.Update_a_record;
 
 			ListViewItem item3 = new ListViewItem(new string[]
-				{"Get_record"}, 0, groupTrg);
+				{"GetRecord"}, 0, groupTrg);
 			item3.Tag = CommonCrmActions.Get_record;
 
-			ListViewItem item4 = new ListViewItem(new string[]
-				{"Delete_a_record"}, 0, groupTrg);
-			item4.Tag = CommonCrmActions.Delete_a_record;
+			//ListViewItem item4 = new ListViewItem(new string[]
+			//	{"Delete_a_record"}, 0, groupTrg);
+			//item4.Tag = CommonCrmActions.Delete_a_record;
 
 			//current
 
 			ListViewItem item5 = new ListViewItem(new string[]
-				{"List_records"}, 0, groupTrgCurr);
-			item4.Tag = CurrentCrmActions.List_records;
+				{"ListRecords"}, 0, groupTrgCurr);
+			//item4.Tag = CurrentCrmActions.List_records;
 
 			ListViewItem item6 = new ListViewItem(new string[]
-			{"Get_record"}, 0, groupTrgCurr);
+			{"GetRecord"}, 0, groupTrgCurr);
 			item6.Tag = CurrentCrmActions.Get_record;
 
 			ListViewItem item7 = new ListViewItem(new string[]
-			{"Create_a_new_record"}, 0, groupTrgCurr);
+			{"CreateRecord"}, 0, groupTrgCurr);
 			item7.Tag = CurrentCrmActions.Create_a_new_record;
 
 			ListViewItem item8 = new ListViewItem(new string[]
-			{"Update_a_record"}, 0, groupTrgCurr);
+			{"UpdateRecord"}, 0, groupTrgCurr);
 			item8.Tag = CurrentCrmActions.Update_a_record;
 
 			ListViewItem item9 = new ListViewItem(new string[]
-			{"Relate_records"}, 0, groupTrgCurr);
+			{"RelateRecords"}, 0, groupTrgCurr);
 			item9.Tag = CurrentCrmActions.Relate_records;
 
 			ListViewItem item10 = new ListViewItem(new string[]
-			{"Unrelate_records"}, 0, groupTrgCurr);
+			{"UnrelateRecords"}, 0, groupTrgCurr);
 			item10.Tag = CurrentCrmActions.Unrelate_records;
 
 			//ListViewItem item11 = new ListViewItem(new string[]
 			//{"List_records"}, 0, groupTrgCurr);
 			//item11.Tag = CurrentCrmActions.List_records;
 
-			ListViewItem item12 = new ListViewItem(new string[]
-			{"Executes_a_changeset_request"}, 0, groupTrgCurr);
-			item12.Tag = CurrentCrmActions.Executes_a_changeset_request;
+			//ListViewItem item12 = new ListViewItem(new string[]
+			//{"Executes_a_changeset_request"}, 0, groupTrgCurr);
+			//item12.Tag = CurrentCrmActions.Executes_a_changeset_request;
 
 			ListViewItem item13 = new ListViewItem(new string[]
-			{"Perform_a_bound_action"}, 0, groupTrgCurr);
+			{"BoundAction"}, 0, groupTrgCurr);
 			item13.Tag = CurrentCrmActions.Perform_a_bound_action;
 
 			ListViewItem item14 = new ListViewItem(new string[]
-			{"Perform_an_unbound_action"}, 0, groupTrgCurr);
+			{"UnboundAction"}, 0, groupTrgCurr);
 			item14.Tag = CurrentCrmActions.Perform_an_unbound_action;
 
 			ListViewItem item15 = new ListViewItem(new string[]
-			{"Delete_a_record"}, 0, groupTrgCurr);
-			item15.Tag = CurrentCrmActions.Delete_a_record;
+			{"ListEnvirnoments"}, 1, groupGeneral);
+			item15.Tag = PowerAppsTemplates.Actions.PowerPlatFormListAllEnvirnoments;
 
-
+			ListViewItem item16 = new ListViewItem(new string[]
+		{"ListPowerApss"}, 2, groupGeneral);
+			item16.Tag = PowerAppsTemplates.Actions.AllPowerApps;
 
 			listViewActions.Items.AddRange(
 			new ListViewItem[] { item0, item1, item2, item3,
-				item4,item5,item6,item7,item8,item9,item10
-			,item12, item13,item14,item15});
+				item5,item6,item7,item8,item9,item10
+			, item13,item14,item15,item16});
 
 		}
 
@@ -513,7 +524,7 @@ namespace PowerAutomateForCrmSolution
 					}
 					if (result != null && result.IsSuccessStatusCode)
 					{
-						HideNotification();
+						//HideNotification();
 						var status = result.StatusCode;
 						var json = result.Content.ReadAsStringAsync().Result;
 						rootFlow = JsonConvert.DeserializeObject<RootFlow>(json);
@@ -523,9 +534,10 @@ namespace PowerAutomateForCrmSolution
 							var groupTrg = new ListViewGroup("System: All PowerAutomate");
 							listViewFlows.Groups.Add(groupTrg);
 							ImageList myImageList = new ImageList();
+							myImageList.ColorDepth = ColorDepth.Depth32Bit;
 							myImageList.Images.Add(
 							LoadImage("https://yt3.ggpht.com/ytc/AAUvwnhFJfURr8yQoGO1YMAOhLWIrh5cHd4OVjMKZvTTWA=s68-c-k-c0x00ffffff-no-rj"));
-							myImageList.ImageSize = new Size(50, 35);
+							myImageList.ImageSize = new Size(30, 35);
 							listViewFlows.LargeImageList = myImageList;
 							listViewFlows.TileSize = new Size(550, 50);
 
@@ -1182,5 +1194,7 @@ namespace PowerAutomateForCrmSolution
 		{
 
 		}
+
+		
 	}
 }
