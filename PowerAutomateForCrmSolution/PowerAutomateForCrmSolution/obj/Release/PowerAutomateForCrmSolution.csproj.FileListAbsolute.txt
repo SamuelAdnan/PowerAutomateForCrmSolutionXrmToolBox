@@ -37,7 +37,6 @@ C:\Users\adsa\source\repos\Git\xrmtoolboxpowerautomate\PowerAutomateForCrmSoluti
 C:\Users\adsa\source\repos\Git\xrmtoolboxpowerautomate\PowerAutomateForCrmSolution\PowerAutomateForCrmSolution\bin\Release\Newtonsoft.Json.xml
 C:\Users\adsa\source\repos\Git\xrmtoolboxpowerautomate\PowerAutomateForCrmSolution\PowerAutomateForCrmSolution\bin\Release\ScintillaNET.xml
 C:\Users\adsa\source\repos\Git\xrmtoolboxpowerautomate\PowerAutomateForCrmSolution\PowerAutomateForCrmSolution\bin\Release\XrmToolBox.PluginsStore.xml
-C:\Users\adsa\source\repos\Git\xrmtoolboxpowerautomate\PowerAutomateForCrmSolution\PowerAutomateForCrmSolution\obj\Release\PowerAutomateForCrmSolution.csprojAssemblyReference.cache
 C:\Users\adsa\source\repos\Git\xrmtoolboxpowerautomate\PowerAutomateForCrmSolution\PowerAutomateForCrmSolution\obj\Release\PowerAutomateForCrmSolution.MyPluginControl.resources
 C:\Users\adsa\source\repos\Git\xrmtoolboxpowerautomate\PowerAutomateForCrmSolution\PowerAutomateForCrmSolution\obj\Release\PowerAutomateForCrmSolution.csproj.GenerateResource.cache
 C:\Users\adsa\source\repos\Git\xrmtoolboxpowerautomate\PowerAutomateForCrmSolution\PowerAutomateForCrmSolution\obj\Release\PowerAutomateForCrmSolution.csproj.CoreCompileInputs.cache
