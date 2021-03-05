@@ -43,3 +43,4 @@ C:\Users\adsa\source\repos\Git\xrmtoolboxpowerautomate\PowerAutomateForCrmSoluti
 C:\Users\adsa\source\repos\Git\xrmtoolboxpowerautomate\PowerAutomateForCrmSolution\PowerAutomateForCrmSolution\obj\Release\PowerAutomateForCrmSolution.csproj.CopyComplete
 C:\Users\adsa\source\repos\Git\xrmtoolboxpowerautomate\PowerAutomateForCrmSolution\PowerAutomateForCrmSolution\obj\Release\PowerAutomateForCrmSolution.dll
 C:\Users\adsa\source\repos\Git\xrmtoolboxpowerautomate\PowerAutomateForCrmSolution\PowerAutomateForCrmSolution\obj\Release\PowerAutomateForCrmSolution.pdb
+C:\Users\adsa\source\repos\Git\xrmtoolboxpowerautomate\PowerAutomateForCrmSolution\PowerAutomateForCrmSolution\obj\Release\PowerAutomateForCrmSolution.csprojAssemblyReference.cache

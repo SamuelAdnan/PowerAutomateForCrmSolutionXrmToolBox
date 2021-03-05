@@ -4,4 +4,8 @@
     <StartAction>Program</StartAction>
     <StartProgram>C:\Users\adsa\source\repos\Git\xrmtoolboxpowerautomate\PowerAutomateForCrmSolution\PowerAutomateForCrmSolution\bin\Debug\XrmToolBox.exe</StartProgram>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
+    <StartAction>Program</StartAction>
+    <StartProgram>C:\Users\adsa\source\repos\Git\xrmtoolboxpowerautomate\PowerAutomateForCrmSolution\PowerAutomateForCrmSolution\bin\Debug\XrmToolBox.exe</StartProgram>
+  </PropertyGroup>
 </Project>
